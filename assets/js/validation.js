@@ -1,8 +1,3 @@
-/**
- * @author Kishor Mali
- */
-
-
 $(document).ready(function(){
 
     jQuery.validator.addMethod("notEqualTo", function(value, element)

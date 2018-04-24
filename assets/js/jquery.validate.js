@@ -1136,8 +1136,6 @@ $.extend( $.validator, {
 			// Or use custom methods to implement your own email validation
 			//return this.optional( element ) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test( value );
 			return this.optional( element ) || /^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,4}$/.test( value );
-			
-			// The email validation regular expression added by kishor mali
 		},
 
 		// http://jqueryvalidation.org/url-method/
