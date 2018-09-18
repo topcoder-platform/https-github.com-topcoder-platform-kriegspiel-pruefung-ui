@@ -10,18 +10,18 @@ class User extends BaseController
     public function __construct()
     {
         parent::__construct();
-        $this->isLoggedIn();   
+        $this->isLoggedIn();
     }
-    
+
     /**
      * This function used to load the first screen of the user
      */
     public function index()
     {
         $this->global['pageTitle'] = 'Topcoder SRM: Dashboard';
-        
+
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://gameonapi.herokuapp.com/api/v1/player/tournaments");
+        curl_setopt($ch, CURLOPT_URL, "https://gameon-api.herokuapp.com/api/v1/player/tournaments");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         'Content-Type: application/json',
@@ -30,7 +30,7 @@ class User extends BaseController
         ));
 
         $result = json_decode(curl_exec($ch));
-        
+
         curl_close($ch);
 
         $this->session->set_userdata(array( 'TOURNAMENT_ID' => $result->tournaments[0]->tournamentId));
@@ -40,7 +40,7 @@ class User extends BaseController
         // If the user already entered the tournament, he can only enter Match not the tournament
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://gameonapi.herokuapp.com/api/v1/player/matches/");
+        curl_setopt($ch, CURLOPT_URL, "https://gameon-api.herokuapp.com/api/v1/player/matches/");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         'Content-Type: application/json',
@@ -49,13 +49,13 @@ class User extends BaseController
         ));
 
         $result = json_decode(curl_exec($ch));
-        
+
         curl_close($ch);
 
         if ($result !== "") {
             $this->session->set_userdata(array('MATCH_ID' => $result->matches[0]->matchId));
         }
-        
+
         $this->loadViews("live-tournaments", $this->global, $data, NULL);
     }
 
@@ -68,9 +68,9 @@ class User extends BaseController
 
         $ch = curl_init();
         if ($this->session->userdata('MATCH_ID')) {
-            curl_setopt($ch, CURLOPT_URL, "https://gameonapi.herokuapp.com/api/v1/player/matches/". $this->session->userdata('MATCH_ID') ."/enter");
+            curl_setopt($ch, CURLOPT_URL, "https://gameon-api.herokuapp.com/api/v1/player/matches/". $this->session->userdata('MATCH_ID') ."/enter");
         } else {
-            curl_setopt($ch, CURLOPT_URL, "https://gameonapi.herokuapp.com/api/v1/player/tournaments/". $this->session->userdata('TOURNAMENT_ID') ."/enter");
+            curl_setopt($ch, CURLOPT_URL, "https://gameon-api.herokuapp.com/api/v1/player/tournaments/". $this->session->userdata('TOURNAMENT_ID') ."/enter");
         }
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -81,11 +81,11 @@ class User extends BaseController
         ));
 
         $result = json_decode(curl_exec($ch));
-        
+
         curl_close($ch);
 
         $this->session->set_userdata(array('MATCH_ID' => $result->matchId));
-        
+
         $this->loadViews("competition-form", $this->global, NULL);
     }
 
@@ -96,7 +96,7 @@ class User extends BaseController
     public function submit() {
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://gameonapi.herokuapp.com/api/v1/player/matches/" . $this->session->userdata('MATCH_ID') ."/score");
+        curl_setopt($ch, CURLOPT_URL, "https://gameon-api.herokuapp.com/api/v1/player/matches/" . $this->session->userdata('MATCH_ID') ."/score");
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -106,7 +106,7 @@ class User extends BaseController
         ));
 
         $result = json_decode(curl_exec($ch));
-        
+
         curl_close($ch);
 
         redirect('/leaderboard');
@@ -118,9 +118,9 @@ class User extends BaseController
     public function leaderboard()
     {
         $this->global['pageTitle'] = 'Topcoder SRM: Dashboard';
-        
+
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://gameonapi.herokuapp.com/api/v1/player/matches/" . $this->session->userdata('MATCH_ID') ."/leaderboard");
+        curl_setopt($ch, CURLOPT_URL, "https://gameon-api.herokuapp.com/api/v1/player/matches/" . $this->session->userdata('MATCH_ID') ."/leaderboard");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         'Content-Type: application/json',
@@ -129,11 +129,11 @@ class User extends BaseController
         ));
 
         $result = json_decode(curl_exec($ch));
-        
+
         curl_close($ch);
 
         $data['leaderboard'] = $result->leaderboard;
-        
+
         $this->loadViews("leaderboard", $this->global, $data, NULL);
     }
 
@@ -145,7 +145,7 @@ class User extends BaseController
         $this->global['pageTitle'] = 'Topcoder SRM: Dashboard';
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://gameonapi.herokuapp.com/api/v1/player/upcoming-tournaments");
+        curl_setopt($ch, CURLOPT_URL, "https://gameon-api.herokuapp.com/api/v1/player/upcoming-tournaments");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         'Content-Type: application/json',
@@ -154,11 +154,11 @@ class User extends BaseController
         ));
 
         $result = json_decode(curl_exec($ch));
-        
+
         curl_close($ch);
 
         $data['tournaments'] = $result->tournaments;
-        
+
         $this->loadViews("table", $this->global, $data, NULL);
     }
 
@@ -168,11 +168,11 @@ class User extends BaseController
     function pageNotFound()
     {
         $this->global['pageTitle'] = 'Topcoder : 404 - Page Not Found';
-        
+
         $this->loadViews("404", $this->global, NULL, NULL);
     }
 
-    
+
 }
 
 ?>
